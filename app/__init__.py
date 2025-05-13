@@ -2,11 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from opentelemetry import trace
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
-from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -27,22 +22,8 @@ def create_app():
     jwt.init_app(app)
     migrate.init_app(app, db)
 
-    # Set up OpenTelemetry
-    init_tracer(app)
-
     # Register routes
     from . import routes
     app.register_blueprint(routes.bp)
 
     return app
-
-def init_tracer(app):
-    trace.set_tracer_provider(
-        TracerProvider(
-            resource=Resource.create({"service.name": "flask-bookstore-api"})
-        )
-    )
-    trace.get_tracer_provider().add_span_processor(
-        SimpleSpanProcessor(ConsoleSpanExporter())
-    )
-    FlaskInstrumentor().instrument_app(app)
