@@ -6,6 +6,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_migrate import Migrate
 import hashlib
 import os
 
@@ -23,6 +24,8 @@ app.config['JWT_SECRET_KEY'] = 'your-jwt-secret-key'  # This is used for signing
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
+# Initialize the migrate object
+migrate = Migrate(app, db)
 
 # Define the User model
 class User(db.Model):
