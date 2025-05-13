@@ -46,11 +46,6 @@ class Book(db.Model):
     def __repr__(self):
         return f'<Book {self.title} by {self.author}>'
 
-# Create the database tables (run this once)
-def create_tables():
-    with app.app_context():
-        db.create_all()
-
 # OpenTelemetry setup
 def init_tracer():
     # Set up the tracer provider with a service name
@@ -164,5 +159,4 @@ def delete_book(book_id):
 
 # Start Flask server
 if __name__ == '__main__':
-    create_tables()
     app.run(debug=True)
